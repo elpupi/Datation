@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bienvenue sur ma première page avec OpenClassrooms !</title>
+  </head>
+  <body>
+    <h1>Add a file</h1>
+    <input type="file" name="userfile[]" multiple="multiple" id="fileToUpload" data-url="{{ path('vtr_timeland_add2') }}">
+
+
+
+
+<script>
+
+// Run when
+var elts = document.getElementsByTagName("input"); //
+for(var i = 0; i < elts.length; i++) {
+//
+
+var input = elts[i];
+if (input.type !== "file") continue; // Skip all
+var url = input.getAttribute("data-url"); //
+
+if (!url) continue;
+
+
+input.addEventListener("change", function() { // When user selects file
+var file = this.files[0];
+console.log("Lengthhhhhhhhhhhhhhhhhhhh : " + this.files.length);
+// Assume a single file selection
+if (!file) return;
+// If no file, do nothing
+var xhr = new XMLHttpRequest();
+// Create a new request
+xhr.open("POST", url);
+// POST to the URL
+
+xhr.setRequestHeader("X-Requested-With","XMLHttpRequest");
+
+
+xhr.upload.onprogress = function(e) {
+if (e.lengthComputable) {
+/*target.innerHTML = message +
+Math.round(e.loaded/e.total*100) +
+"% Complete";*/
+console.log(Math.round(e.loaded/e.total*100) +
+"% Complete");
+}
+};
+xhr.upload.onload = function(e) {
+/*uploading = false;
+target.classList.remove("uploading");
+target.innerHTML = "Drop files to upload";
+*/
+console.log("fini");
+};
+
+xhr.onreadystatechange = function() {
+// Define event listener
+// If the request is compete and was successful
+if (xhr.readyState === 4 && xhr.status === 200) {
+// Get the type of the response
+var type = xhr.getResponseHeader("Content-Type");
+// Check type so we don't get HTML documents in the future
+if (type.indexOf("xml") !== -1 && request.responseXML)
+console.log(xhr.responseXML);
+// Document response
+else if (type === "application/json")
+console.log(JSON.parse(xhr.responseText)); // JSON response
+else
+console.log(xhr.responseText);
+// String response
+}
+};
+
+
+
+
+
+var formdata = new FormData();
+formdata.append("caca-file", this.files[0]);
+formdata.append("pipi-file", this.files[1]);
+xhr.send(formdata);
+
+
+
+
+// Send the file as body
+}, false);
+}
+</script>
+
+  </body>
+</html>

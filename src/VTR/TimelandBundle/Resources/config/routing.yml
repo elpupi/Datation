@@ -1,0 +1,35 @@
+vtr_timeland_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: VTRTimelandBundle:Default:index }
+
+vtr_timeland_add:
+    path:     /add
+    defaults: { _controller: VTRTimelandBundle:File:add }
+
+vtr_timeland_view:
+    path:     /view/{id}
+    defaults: { _controller: VTRTimelandBundle:File:view }
+
+vtr_timeland_add2:
+    path:     /add2
+    defaults: { _controller: VTRTimelandBundle:File:add2 }
+
+vtr_timeland_upload:
+    path:     /upload
+    defaults: { _controller: VTRTimelandBundle:File:upload }
+
+vtr_timeland_upload2:
+    path:     /upload2
+    defaults: { _controller: VTRTimelandBundle:File:upload2 }
+
+vtr_timeland_upload3:
+    path:     /upload3
+    defaults: { _controller: VTRTimelandBundle:File:upload3 }
+
+vtr_timeland_dropzone:
+    path:     /dropzone
+    defaults: { _controller: VTRTimelandBundle:File:dropzone }
+
+vtr_timeland_home:
+    path:     /timeland
+    defaults: { _controller: VTRTimelandBundle:Default:timeland }

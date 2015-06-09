@@ -1,0 +1,69 @@
+<?php
+namespace VTR\TimelandBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use VTR\TimelandBundle\Entity\File;
+
+/**
+ * @ORM\Entity(repositoryClass="OC\PlatformBundle\Entity\ImageRepository")
+ * @ORM\HasLifecycleCallbacks
+ */
+class Archive {
+
+    /**
+    * @ORM\Column(name="id", type="integer")
+    * @ORM\Id
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
+    private $id;
+
+    /**
+    * @ORM\Column(name="path", type="string", length=255)
+    */
+    private $filename;
+
+
+    private $listFiles;
+
+
+    public function __construct() {
+        $this->listFiles = array();
+        $this->filename = "";
+    }
+
+    public function addFile(File $file) {
+        $this->listFiles[] = $file;
+    }
+    
+
+    /**
+    * @ORM\PrePersist()
+    * @ORM\PreUpdate()
+    */
+    public function preUpload()
+    {
+        $this->filename = md5(date('Y-m-d H:i:s:u'));
+    }
+    
+    /**
+    * @ORM\PostPersist()
+    * @ORM\PostUpdate()
+    */
+    public function save($withEraseFiles = true) {
+        $path = File::getUploadRootDir() . $this->filename . 'tar';
+
+        $a = new PharData($path);
+
+        foreach($this->listFiles as $f)
+        {
+            $a->addFile($f.getPath());
+            if($withEraseFiles) $f->removeFile();
+        }
+        // COMPRESS archive.tar FILE. COMPRESSED FILE WILL BE archive.tar.gz
+        $a->compress(Phar::GZ);        
+
+        // NOTE THAT BOTH FILES WILL EXISTS. SO IF YOU WANT YOU CAN UNLINK archive.tar
+        unlink($path);
+    }
+
+}

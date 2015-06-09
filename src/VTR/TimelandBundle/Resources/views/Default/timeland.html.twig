@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The history of time</title>
+        <link href="{{ asset('css/default.css') }}" rel="stylesheet">
+        
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+        <link href="{{ asset('css/front.css') }}" rel="stylesheet">
+    </head>
+<body>
+
+<div id="container">
+    <nav id="nav-bar">
+        <a href="" id="search"></a>    
+        <div id="title-container">
+            <h1 class="center">The history of time</h1>
+            <h2 class="center">Write here your story, Je ne sais pas quoi mettre</h2>
+        </div>
+    </nav>
+    <div id="time-banner">Here the time passes</div>
+    <div id="insert-btn" class="clickable">Insert</div>
+
+    <div id="freeze-or-not">
+        <div id="radio-wrapper">
+            <div class="radio"><input type="radio" name="freeze" value="saved"><label>We host your file (maximum 10 Mo)</label></div>
+            <span>or</span>
+            <div class="radio"><input type="radio" name="freeze" value="Not saved"><label>We just freeze the footprint of it</label></input></div>
+        </div>
+    </div>
+
+    <div id="public-private">
+        <span class="clickable">Public</span>
+        <span class="clickable">Private</span>
+    </div>
+
+<!--
+<form action="demo_form.asp">
+  Select a file: <input type="file" name="img">
+  <input type="submit">
+</form>
+-->
+
+ <div id="actions" class="row">
+
+      <div id="button-actions" class="col-lg-7">
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Add files...</span>
+        </span>
+        <button type="submit" class="btn btn-primary start">
+            <i class="glyphicon glyphicon-upload"></i>
+            <span>Start upload</span>
+        </button>
+        <!--<button type="reset" class="btn btn-warning cancel">
+            <i class="glyphicon glyphicon-ban-circle"></i>
+            <span>Cancel upload</span>
+        </button>-->
+      </div>
+
+      <div class="col-lg-5">
+        <!-- The global file processing state -->
+        <span class="fileupload-process">
+          <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+          </div>
+        </span>
+      </div>
+
+    </div>
+
+
+<div class="table table-striped" class="files" id="previews">
+
+      <div id="template" class="file-row">
+        <!-- This is used as the file preview template -->
+        <div>
+            <span class="preview"><img data-dz-thumbnail /></span>
+        </div>
+        <div>
+            <p class="name" data-dz-name></p>
+            <strong class="error text-danger" data-dz-errormessage></strong>
+        </div>
+        <div>
+            <p class="size" data-dz-size></p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+            </div>
+        </div>
+        <div>
+        <div class="start"></div>
+          <!--<button class="btn btn-primary start">
+              <i class="glyphicon glyphicon-upload"></i>
+              <span>Start</span>
+          </button>-->
+          <button data-dz-remove class="btn btn-warning cancel">
+              <i class="glyphicon glyphicon-ban-circle"></i>
+              <span>Cancel</span>
+          </button>
+          <!--<button data-dz-remove class="btn btn-danger delete">
+            <i class="glyphicon glyphicon-trash"></i>
+            <span>Delete</span>
+          </button>-->
+        </div>
+      </div>
+
+    </div>
+
+
+<div id="get-id-btn" class="clickable">Get Footprint</div>
+
+
+<form action="{{ path('vtr_timeland_dropzone') }}" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="Upload Image" name="submit-test">
+</form>
+
+</div>
+
+
+<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="{{ asset('js/dropzone.js') }}"></script>
+<script>
+   // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+    var previewNode = document.querySelector("#template");
+    previewNode.id = "";
+    var previewTemplate = previewNode.parentNode.innerHTML;
+    previewNode.parentNode.removeChild(previewNode);
+     
+    var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+      url: "{{ path('vtr_timeland_dropzone') }}", // Set the url
+      thumbnailWidth: 80,
+      thumbnailHeight: 80,
+      parallelUploads: 20,
+      previewTemplate: previewTemplate,
+      autoQueue: false, // Make sure the files aren't queued until manually added
+      previewsContainer: "#previews", // Define the container to display the previews
+      clickable: ".fileinput-button", // Define the element that should be used as click trigger to select files.
+
+     /* init: function() {
+        this.on("addedfile", function() {
+            console.log(this.files);
+          
+        });
+      }*/
+
+    });
+    var totalSize = 0;
+    var nb_files_uploaded = 0;
+    var addedFiles = [];
+    myDropzone.on("addedfile", function(file) {
+    console.log("before tot " + totalSize);
+        totalSize += file.size;
+        ++nb_files_uploaded;
+    console.log("tot " + totalSize);
+    console.log("file " + file.size);
+        if(totalSize > 10000000)//10*1024*1024)
+        {
+    alert("Attention");
+            myDropzone.removeFile(file);
+    console.log(this.files);       
+        } 
+    });
+
+    myDropzone.on("removedfile", function(file) {
+        totalSize -= file.size;   
+        --nb_files_uploaded;    
+        console.log("remove: " + totalSize);
+     
+    });
+
+    myDropzone.on("processing", function(file) {
+    /*    console.log("coucou");
+        console.log(file);
+        console.log("aurevoir");*/
+        --nb_files_uploaded;
+        if(nb_files_uploaded == 0)
+    {   //     console.log("Fini");
+        $("#actions").addClass("load-done");
+        $("#get-id-btn").addClass("load-done");
+    }
+    });
+
+    myDropzone.on("error", function(file, message, xhr) { alert(message); myDropzone.removeFile(file); });
+
+    myDropzone.on("complete", function(file) {
+
+      /*    if (file.size > 1.5*1024*1024) {
+         alert("File was Larger than 3.5Mb!");
+         return false;
+      }
+
+      if(!file.type.match('image.*')) {
+        alert("Upload Image Only!");
+        return false;
+      }*/
+    });
+
+    myDropzone.on("addedfile", function(file) {
+      // Hookup the start button
+      file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+    });
+     
+    // Update the total progress bar
+    myDropzone.on("totaluploadprogress", function(progress) {
+      document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+    });
+     
+    myDropzone.on("sending", function(file) {
+      // Show the total progress bar when upload starts
+      document.querySelector("#total-progress").style.opacity = "1";
+      // And disable the start button
+      file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
+    });
+     
+    // Hide the total progress bar when nothing's uploading anymore
+    myDropzone.on("queuecomplete", function(progress) {
+      document.querySelector("#total-progress").style.opacity = "0";
+    });
+     
+    // Setup the buttons for all transfers
+    // The "add files" button doesn't need to be setup because the config
+    // `clickable` has already been specified.
+    document.querySelector("#actions .start").onclick = function() {
+      myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
+    };
+    /*document.querySelector("#actions .cancel").onclick = function() {
+      myDropzone.removeAllFiles(true);
+    };*/
+
+</script>
+<script src="{{ asset('js/front.js') }}"></script>
+</body>
+</html>
