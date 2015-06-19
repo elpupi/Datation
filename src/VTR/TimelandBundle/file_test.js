@@ -18,3 +18,4 @@ client.methods.jsonMethod(function(data,response){
     console.log(data);
     // raw response 
     console.log(response);
+});

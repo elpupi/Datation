@@ -33,3 +33,7 @@ vtr_timeland_dropzone:
 vtr_timeland_home:
     path:     /timeland
     defaults: { _controller: VTRTimelandBundle:Default:timeland }
+
+vtr_timeland_cpp:
+    path:     /cpp
+    defaults: { _controller: VTRTimelandBundle:File:cpp }

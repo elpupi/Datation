@@ -112,7 +112,7 @@
 
 
 <div id="get-id-btn" class="clickable">Get Footprint</div>
-
+<div id="cpp-result"></div>
 
 <form action="{{ path('vtr_timeland_dropzone') }}" method="post" enctype="multipart/form-data">
     Select image to upload:
@@ -232,6 +232,15 @@
     /*document.querySelector("#actions .cancel").onclick = function() {
       myDropzone.removeAllFiles(true);
     };*/
+
+
+    $("#get-id-btn").click(function(){
+        $.ajax({url: "{{ path('vtr_timeland_cpp') }}", success: function(result){
+            $("#cpp-result").html(result);
+        }});
+    });
+
+
 
 </script>
 <script src="{{ asset('js/front.js') }}"></script>

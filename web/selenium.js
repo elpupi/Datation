@@ -1,11 +1,13 @@
 var webdriver = require('selenium-webdriver');
 var chrome = require('selenium-webdriver/chrome');
+var firefox = require('selenium-webdriver/firefox');
 var path = require('chromedriver').path;
 
 var service = new chrome.ServiceBuilder(path).build();
 chrome.setDefaultService(service);
 
 var driver = new webdriver.Builder()
+//    .withCapabilities(webdriver.Capabilities.firefox())
     .withCapabilities(webdriver.Capabilities.chrome())
     .build();
 
@@ -21,8 +23,10 @@ driver.wait(function() {
 
 driver.get('http://localhost/Timeland/web/app_dev.php/timeland');
 var El = driver.findElement(webdriver.By.id("fileToUpload"));
-El.sendKeys("/home/mlottit/upra_data_numero_tva");
+El.sendKeys("/home/milottit/Images/Octobre_2014/Natasha/IMG_2276.JPG");
 El.submit();
 //driver.findElement(webdriver.By.name('submit-test')).click();
+//driver.wait(function() {
+//return false; }, 100000);
 
-//driver.quit();
+driver.quit();
